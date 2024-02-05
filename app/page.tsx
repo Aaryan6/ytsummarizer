@@ -50,8 +50,6 @@ export default function Home() {
       setOpenDialog(true);
       return;
     }
-    console.log(result);
-    console.log(Object.keys(result).length);
     if (result) setResult(result);
     setLoading(false);
   };
