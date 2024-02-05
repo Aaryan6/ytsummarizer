@@ -31,8 +31,10 @@ export default function Home() {
   const [openDialog, setOpenDialog] = useState(false);
   const [url, setUrl] = useState("");
   const [result, setResult] = useState<IResult | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const onClick = async () => {
+    setLoading(true);
     const key = sessionStorage.getItem("openai_key");
 
     if (!url) return setUrl("Please enter a url");
@@ -51,6 +53,7 @@ export default function Home() {
     console.log(result);
     console.log(Object.keys(result).length);
     if (result) setResult(result);
+    setLoading(false);
   };
 
   return (
@@ -70,17 +73,30 @@ export default function Home() {
                 setUrl(e.target.value)
               }
             />
-            <Button onClick={onClick}>Search</Button>
+            {loading ? (
+              <Button onClick={onClick} className="animate-bounce">
+                Summarizing...
+              </Button>
+            ) : (
+              <Button onClick={onClick} className="">
+                Go!
+              </Button>
+            )}
           </div>
           {result && (
-            <h2 className="text-xl font-semibold">
-              Title: {result?.docs[0].metadata?.title}
-            </h2>
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold">
+                Title: {result?.docs[0].metadata?.title}
+              </h2>
+              <h3 className="text-base font-medium text-muted-foreground">
+                Channel: {result?.docs[0].metadata?.author}
+              </h3>
+            </div>
           )}
         </div>
       </div>
       {result && (
-        <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4 flex-1">
+        <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4 flex-1 animate-in duration-150">
           <ScrollArea className="max-h-[25rem] rounded-md border p-4 w-1/2">
             <h3 className="my-2 font-medium">Here is the summary</h3>
             <p className="whitespace-pre-wrap mt-2 text-foreground/80">
