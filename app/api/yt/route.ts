@@ -6,13 +6,6 @@ export async function POST(req: Request) {
   const body = await req.json();
   const { url, key } = body;
 
-  if (!key) {
-    return NextResponse.json({
-      message: "OpenAI API key not found.",
-      status: 404,
-    });
-  }
-
   const openai = new OpenAI({ apiKey: key });
 
   const loader = YoutubeLoader.createFromUrl(url, {
@@ -22,17 +15,26 @@ export async function POST(req: Request) {
 
   const docs = await loader.load();
 
+  if (!key) {
+    return NextResponse.json({
+      summary: {},
+      docs,
+      message: "OpenAI API key not found.",
+      status: 404,
+    });
+  }
+
   const summary = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-3.5-turbo-1106",
     messages: [
       {
         role: "system",
         content:
-          "You are expert in summerizing long paragraphs, your work is to summerize the given text without missing the informative and important thing.",
+          "You are expert in summerizing youtube videos content, your work is to summerize the given context of a youtube video in the structured way, if possible use heading & bullet points to explain the things, don't miss the informative and important thing.",
       },
       {
         role: "user",
-        content: `Can you summarize this? \n'''${docs[0]?.pageContent}'''`,
+        content: `Summarize this content of a youtube video? \n'''${docs[0]?.pageContent}'''`,
       },
     ],
   });

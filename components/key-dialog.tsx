@@ -15,9 +15,11 @@ import { useState } from "react";
 export default function KeyDialog({
   openDialog,
   setOpenDialog,
+  onSubmit,
 }: {
   openDialog: boolean;
   setOpenDialog: (open: boolean) => void;
+  onSubmit: () => void;
 }) {
   const [key, setKey] = useState("");
 
@@ -25,13 +27,16 @@ export default function KeyDialog({
     if (!key) return setKey("Please enter a key");
     sessionStorage.setItem("openai_key", key);
     setOpenDialog(false);
+    onSubmit();
   };
 
   return (
     <Dialog open={openDialog} onOpenChange={() => setOpenDialog(false)}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>You need to enter your Openai API key</DialogTitle>
+          <DialogTitle className="leading-snug">
+            Set the OpenAI API key to Generate Summary
+          </DialogTitle>
           <DialogDescription>
             Go to{" "}
             <a href="https://openai.com/" target="_blank" className="underline">
