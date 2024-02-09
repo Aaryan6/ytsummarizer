@@ -58,7 +58,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col lg:flex-row space-y-10 lg:space-x-10 h-screen px-8 py-8 lg:px-16 lg:py-16 overflow-y-auto">
+    <main className="w-full flex flex-col lg:flex-row space-y-10 lg:space-x-10 flex-1 px-8 py-2 lg:px-16 lg:py-0">
       <KeyDialog
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
